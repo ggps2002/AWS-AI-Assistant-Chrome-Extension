@@ -5,6 +5,10 @@
 ## Introduction 💬📚✨
 This extension connects to a deployed AI on Hugging Face Spaces to chat, explain AWS services, and highlight relevant buttons, which vanish after clicking.
 
+## Fundamental Flow
+
+![Extension Preview](./assets/flow.png)
+
 ## Features 🛠️🤖🚀
 - **AI Assistant:** Chat with Hugging Face agent  
 - **AWS Lessons:** Learn services & use cases  
