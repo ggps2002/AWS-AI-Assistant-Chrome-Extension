@@ -17,7 +17,7 @@ This extension connects to a deployed AI on Hugging Face Spaces to chat, explain
 - **Step Guide:** Follow instructions with interactive support  
 
 ## Hugging Face Agent 🤖🌐💡
-- [AI Agent URL](https://pradipto2002-aws-assistant.hf.space)  
+- [AI Agent URL](https://huggingface.co/spaces/Pradipto2002/AWS_Assistant/tree/main)  
 - **Model:** llama-3.3-70b-versatile 
 
 ## How It Works 💡💬✨
