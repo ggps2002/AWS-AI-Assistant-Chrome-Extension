@@ -7,9 +7,9 @@ This extension connects to a deployed AI on Hugging Face Spaces to chat, explain
 
 ## Demo Video
 
-<video src="./assets/demo.mp4" controls width="600">
-Your browser does not support the video tag.
-</video>
+
+
+https://github.com/user-attachments/assets/85e7cf9e-5c28-403f-bed2-8722b8ee00ed
 
 
 
