@@ -1,0 +1,412 @@
+/* Walkthrough overlay. Lives in a shadow root on AWS console pages.
+   Highlighter yellow marks what to do; the console-navy card can't be
+   mistaken for one of the console's own white dialogs. */
+
+.root {
+  --ink: #1b2638;
+  --ink-raised: #263449;
+  --ink-line: #3a4a63;
+  --paper: #ffffff;
+  --text: #e7ecf3;
+  --muted: #b0bccc;
+  --highlight: #ffd60a;
+  --highlight-hover: #ffe14d;
+  --dim: rgba(16, 23, 36, 0.36);
+
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.root *,
+.root *::before,
+.root *::after {
+  box-sizing: border-box;
+}
+
+/* Spotlight: a ring on the element; its huge spread shadow dims the rest of the page. */
+.spotlight {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  border-radius: 10px;
+  pointer-events: none;
+  box-shadow:
+    0 0 0 3px var(--highlight),
+    0 0 0 5px rgba(27, 38, 56, 0.85),
+    0 0 0 100vmax var(--dim);
+  transition: opacity 120ms ease;
+  animation: spotlight-in 220ms ease-out;
+}
+
+.spotlight::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border: 3px solid var(--highlight);
+  border-radius: inherit;
+  animation: pulse 1.8s ease-out infinite;
+}
+
+.spotlight--quiet {
+  box-shadow:
+    0 0 0 3px var(--highlight),
+    0 0 0 5px rgba(27, 38, 56, 0.85);
+}
+
+.spotlight[data-hidden] {
+  opacity: 0;
+}
+
+@keyframes spotlight-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+}
+
+/* Step card */
+.card {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: min(340px, calc(100vw - 24px));
+  padding: 16px 16px 14px;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--text);
+  box-shadow:
+    0 20px 44px -16px rgba(8, 13, 24, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  pointer-events: auto;
+  animation: card-in 180ms ease-out;
+}
+
+.card--docked {
+  left: auto !important;
+  top: auto !important;
+  right: 20px;
+  bottom: 20px;
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    translate: 0 6px;
+  }
+}
+
+.card__arrow {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--ink);
+  transform: rotate(45deg);
+}
+
+.card[data-side='bottom'] .card__arrow {
+  top: -6px;
+}
+.card[data-side='top'] .card__arrow {
+  bottom: -6px;
+}
+.card[data-side='left'] .card__arrow {
+  right: -6px;
+}
+.card[data-side='right'] .card__arrow {
+  left: -6px;
+}
+
+.card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.marker {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--highlight);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.marker svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.card__title {
+  flex: 1;
+  margin: 3px 0 0;
+  color: var(--paper);
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.card__body {
+  margin: 10px 0 0;
+  max-width: 62ch;
+}
+
+.card__body strong {
+  color: var(--paper);
+  font-weight: 650;
+}
+
+.card__body code,
+.value code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+}
+
+.card__body code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--ink-raised);
+}
+
+.icon-button {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin: -2px -4px 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.icon-button:hover {
+  background: var(--ink-raised);
+  color: var(--paper);
+}
+
+.icon-button svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 6px 6px 6px 10px;
+  border-radius: 8px;
+  background: var(--ink-raised);
+}
+
+.value code {
+  flex: 1;
+  overflow-wrap: anywhere;
+  color: var(--paper);
+}
+
+.note {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--ink-raised);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.status--missing {
+  box-shadow: inset 3px 0 0 var(--highlight);
+}
+
+.status__actions {
+  display: flex;
+  gap: 6px;
+}
+
+.spinner {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--ink-line);
+  border-top-color: var(--highlight);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.progress {
+  display: flex;
+  gap: 3px;
+  margin-top: 16px;
+}
+
+.progress span {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--ink-line);
+}
+
+.progress span.progress__done {
+  background: var(--highlight);
+}
+
+.card__foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.count {
+  flex: 1;
+  color: var(--muted);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button--primary {
+  background: var(--highlight);
+  color: var(--ink);
+}
+
+.button--primary:hover {
+  background: var(--highlight-hover);
+}
+
+.button--ghost {
+  background: transparent;
+  color: var(--paper);
+  box-shadow: inset 0 0 0 1px var(--ink-line);
+}
+
+.button--ghost:hover {
+  background: var(--ink-raised);
+}
+
+.button--quiet {
+  padding: 5px 10px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 12.5px;
+}
+
+.button--quiet:hover {
+  background: var(--ink-line);
+}
+
+.button--block {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.button:focus-visible,
+.icon-button:focus-visible,
+.pill:focus-visible {
+  outline: 2px solid var(--highlight);
+  outline-offset: 2px;
+}
+
+/* Minimized */
+.pill {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: min(320px, calc(100vw - 40px));
+  padding: 5px 14px 5px 5px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 12px 28px -12px rgba(8, 13, 24, 0.6);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.pill__text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlight,
+  .card {
+    animation: none;
+  }
+  .spotlight::after {
+    display: none;
+  }
+  .spinner {
+    animation-duration: 2.4s;
+  }
+}

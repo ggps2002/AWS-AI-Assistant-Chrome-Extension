@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Create function | Lambda</title>
+    <style>
+      body { margin: 0; padding: 24px; font-family: Arial, sans-serif; color: #16191f; }
+      section { margin: 16px 0; padding: 16px; border: 1px solid #d5dbdb; border-radius: 12px; }
+      .tiles { display: flex; gap: 8px; }
+      .tile { position: relative; display: block; width: 220px; padding: 12px; border: 2px solid #d5dbdb; border-radius: 8px; cursor: pointer; }
+      .tile-title { display: block; font-weight: 700; }
+      /* Cloudscape hides the native radio and draws its own */
+      .native { position: absolute; top: 0; left: 0; width: 1px; height: 1px; opacity: 0; }
+      .field { display: grid; gap: 4px; margin-bottom: 12px; max-width: 360px; }
+      .options { list-style: none; margin: 0; padding: 4px; border: 1px solid #d5dbdb; }
+      .options li { padding: 6px; cursor: pointer; }
+      .options .desc { margin-left: 8px; color: #5f6b7a; }
+      .primary { padding: 6px 18px; border: 0; border-radius: 16px; background: #ff9900; font-weight: 700; cursor: pointer; }
+      .sr-only { position: absolute; inset-block-start: -9999px; inset-inline-start: -9999px; width: 1px; height: 1px; overflow: hidden; }
+      .spacer { height: 1400px; }
+      #banner { display: none; padding: 12px; background: #e9f7ec; }
+    </style>
+  </head>
+  <body>
+    <div id="banner" role="status">Successfully created the function my-node-backend.</div>
+    <h1>Create function</h1>
+    <span class="sr-only">Create function</span>
+
+    <section>
+      <div class="tiles" role="radiogroup">
+        <label class="tile" id="tile-scratch">
+          <input class="native" type="radio" name="mode" value="scratch" />
+          <span class="tile-title">Author from scratch</span>
+          <span>Start with a simple Hello World example.</span>
+        </label>
+        <label class="tile">
+          <input class="native" type="radio" name="mode" value="blueprint" />
+          <span class="tile-title">Use a blueprint</span>
+          <span>Build a Lambda application from sample code.</span>
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Basic information</h2>
+      <div class="field">
+        <label id="fn-name-label" for="fn-name">Function name</label>
+        <input id="fn-name" aria-labelledby="fn-name-label" />
+      </div>
+      <div class="field">
+        <span id="runtime-label">Runtime</span>
+        <button id="runtime" type="button" aria-haspopup="listbox" aria-labelledby="runtime-label runtime-value">
+          <span id="runtime-value">Node.js 20.x</span>
+        </button>
+        <div id="runtime-options"></div>
+      </div>
+      <button id="deploy" type="button">Deploy now</button>
+    </section>
+
+    <advanced-settings></advanced-settings>
+
+    <section>
+      <iframe id="triggers" src="/lambda/frame" title="Triggers" style="width: 360px; height: 80px; border: 1px solid #d5dbdb"></iframe>
+    </section>
+
+    <div class="spacer"></div>
+    <button id="submit" class="primary" type="button">Create function</button>
+
+    <script>
+      const options = document.getElementById('runtime-options');
+      document.getElementById('runtime').addEventListener('click', () => {
+        // Like Cloudscape, the option list renders a moment after the click.
+        setTimeout(() => {
+          options.innerHTML =
+            '<ul class="options" role="listbox">' +
+            '<li role="option" data-value="Node.js 20.x"><span>Node.js 20.x</span></li>' +
+            '<li role="option" id="node22" data-value="Node.js 22.x"><span>Node.js 22.x</span><span class="desc">Latest LTS</span></li>' +
+            '<li role="option" data-value="Python 3.13"><span>Python 3.13</span></li>' +
+            '</ul>';
+        }, 400);
+      });
+      options.addEventListener('click', (event) => {
+        const option = event.target.closest('[role="option"]');
+        if (!option) return;
+        document.getElementById('runtime-value').textContent = option.dataset.value;
+        setTimeout(() => (options.innerHTML = ''), 50);
+      });
+
+      customElements.define(
+        'advanced-settings',
+        class extends HTMLElement {
+          connectedCallback() {
+            const root = this.attachShadow({ mode: 'open' });
+            root.innerHTML =
+              '<style>section{margin:16px 0;padding:16px;border:1px solid #d5dbdb;border-radius:12px}' +
+              '.native{position:absolute;opacity:0;width:1px;height:1px}</style>' +
+              '<section><h2>Advanced settings</h2>' +
+              '<input class="native" type="checkbox" id="url" />' +
+              '<label id="url-label" for="url">Enable function URL</label></section>';
+          }
+        },
+      );
+
+      document.getElementById('submit').addEventListener('click', () => {
+        const banner = document.getElementById('banner');
+        banner.style.display = 'block';
+        window.scrollTo({ top: 0 });
+      });
+    </script>
+  </body>
+</html>

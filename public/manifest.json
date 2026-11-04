@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "AWS AI Assistant",
+  "version": "2.0.0",
+  "description": "Chat about AWS and get guided, click-by-click walkthroughs right inside the AWS console.",
+  "minimum_chrome_version": "116",
+  "permissions": ["storage", "sidePanel", "scripting"],
+  "host_permissions": [
+    "https://*.aws.amazon.com/*",
+    "https://pradipto2002-aws-assistant.fly.dev/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/index.html"
+  },
+  "action": {
+    "default_title": "Open AWS AI Assistant",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.aws.amazon.com/*"],
+      "exclude_matches": ["https://docs.aws.amazon.com/*", "https://aws.amazon.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": true,
+      "match_about_blank": true
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Functions | Lambda</title>
+    <style>
+      body { margin: 0; font-family: Arial, sans-serif; color: #16191f; }
+      .topnav { display: flex; align-items: center; gap: 12px; height: 40px; padding: 0 16px; background: #232f3e; color: #fff; }
+      .topnav input { width: 320px; }
+      .layout { display: flex; }
+      .side { width: 200px; padding: 16px; display: grid; gap: 8px; align-content: start; }
+      main { flex: 1; padding: 24px; }
+      .header { display: flex; align-items: center; justify-content: space-between; }
+      .primary { padding: 6px 18px; border: 0; border-radius: 16px; background: #ff9900; font-weight: 700; cursor: pointer; }
+      /* Cloudscape-style screen-reader-only text */
+      .sr-only { position: absolute; inset-block-start: -9999px; inset-inline-start: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <header class="topnav">
+      <span>aws</span>
+      <input type="search" placeholder="Search" aria-label="Search" />
+      <button type="button">Services</button>
+    </header>
+    <div class="layout">
+      <nav class="side">
+        <a href="#dashboard">Dashboard</a>
+        <a href="#functions">Functions</a>
+      </nav>
+      <main>
+        <!-- Decoys the finder must ignore -->
+        <span class="sr-only">Create function</span>
+        <button type="button" style="display: none">Create function</button>
+
+        <div class="header">
+          <h1>Functions (0)</h1>
+          <button id="create-function" class="primary" type="button">
+            <span class="content"><span>Create function</span></span>
+          </button>
+        </div>
+        <p>There are no functions to display.</p>
+      </main>
+    </div>
+    <script>
+      document.getElementById('create-function').addEventListener('click', () => {
+        setTimeout(() => (location.href = '/lambda/home?view=create'), 100);
+      });
+    </script>
+  </body>
+</html>
